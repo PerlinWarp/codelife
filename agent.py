@@ -16,6 +16,8 @@ class Agent:
         self.life = max_life
         self.alive_time = 0
 
+        self.c = (0,0,255)
+
     def eat(self, grid):
         c = grid.get_cell(self.x,self.y) 
         if (c.life > 10):
@@ -63,4 +65,4 @@ class Agent:
         self.eat(grid)
 
     def draw(self,screen):
-        pygame.draw.circle(screen, (0,0,255), (self.x, self.y), square_size//4)
+        pygame.draw.circle(screen, self.c, (self.x, self.y), square_size//4)

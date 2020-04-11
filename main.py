@@ -4,6 +4,7 @@ import numpy as np
 import settings
 from grid import Grid
 from agent import Agent
+from agent2 import Agent2
 
 pygame.init()
 w_width = settings.w_width
@@ -16,7 +17,7 @@ grid = Grid(w_width, w_height, screen)
 grid.draw(screen)
 
 # Making an agent
-agent = Agent(w_width//2, w_height//2)
+agent = Agent2(w_width//2, w_height//2)
 
 while not done:
         for event in pygame.event.get():

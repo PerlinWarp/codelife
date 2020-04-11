@@ -39,10 +39,10 @@ class Square:
 class Grid:
     def __init__(self, w_width, w_height, screen):
         # Draw the grid
-        cols = w_width / square_size
-        rows = w_height / square_size
+        cols = w_width // square_size
+        rows = w_height // square_size
 
-        self.cells = c = [[0 for i in range(rows)] for j in range(cols)]
+        self.cells = [[0 for i in range(rows)] for j in range(cols)]
 
 
         for i in range(0, cols):
