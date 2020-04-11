@@ -33,7 +33,8 @@ class Square:
     def draw(self,screen):
         self.g = int( (self.life/max_square_life) * 255 )
         c = (self.r,self.g,self.b)
-        pygame.draw.rect(screen, c, pygame.Rect(self.x, self.y, square_size, self.y))
+        pygame.draw.rect(screen, c, pygame.Rect(self.x, self.y, square_size, square_size))
+        self.r = 0
 
 class Grid:
     def __init__(self, w_width, w_height, screen):
@@ -63,26 +64,22 @@ class Grid:
 
     def get_cell(self,x,y):
         # Convert the world position into cell position 
-        cell_x = x // square_size
-        cell_y = y // square_size
+        x = x//square_size
+        y = y//square_size
 
-        s = self.cells[(cell_x+1) + ((cell_y-1) * w_width)]
-        print(x, s.x)
-        print(y, s.y)
+        s = self.cells[x][y]
         return s 
 
     def set_cell(self,x,y,life):
-        print(len(self.cells))
-        x = x//10
-        y = y//10
+        x = x//square_size
+        y = y//square_size
 
         # Convert the world position into cell position 
-        print("cell_x:", x)
-        print("cell_y:", y)
+        print("cell_x:", x, "/",len(self.cells[0]))
+        print("cell_y:", y, "/", len(self.cells))
 
-        s = self.cells[x-1][y-1]
-        print(x, s.x)
-        print(y, s.y)
-        self.cells[x-1][y-1].r = 255
+        s = self.cells[x][y]
+        s.life -= life;
+        self.cells[x][y].r = 255
 
 

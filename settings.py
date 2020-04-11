@@ -1,4 +1,4 @@
 # Settings that everything uses
-w_width = 800
-w_height = 600
+w_width = 810
+w_height = 610
 square_size = 10

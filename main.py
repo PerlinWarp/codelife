@@ -16,7 +16,7 @@ grid = Grid(w_width, w_height, screen)
 grid.draw(screen)
 
 # Making an agent
-agent = Agent(w_width-11, w_height-11)
+agent = Agent(w_width//2, w_height//2)
 
 while not done:
         for event in pygame.event.get():
@@ -28,7 +28,13 @@ while not done:
         grid.draw(screen)
 
         # Run the agent
-        agent.run(grid)
-        agent.draw(screen)
+        if (agent):
+            if (agent.life < 1):
+                    print("Agent died after: ", agent.alive_time)
+                    del agent
+                    agent = None
+            else:
+                agent.run(grid)
+                agent.draw(screen)
 
         pygame.display.flip()
