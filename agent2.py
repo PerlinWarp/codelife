@@ -9,7 +9,7 @@ class Agent2(Agent):
     def __init__(self,x,y):
         super().__init__(x,y)
 
-    def live(self, grid):
+    def live(self, grid, reward):
         c = grid.get_cell(self.x,self.y)
         r = c.r
         g = c.g
@@ -30,7 +30,6 @@ class Agent2(Agent):
         if(random.random() < 0.01):
             delta_x = agent_size
         if(random.random() < 0.09):
-            print(self.x, self.y)
             delta_x = -agent_size
         if(random.random() < 0.03):
             delta_y = agent_size

@@ -4,19 +4,18 @@ import numpy as np
 get_bin = lambda x, n: format(a, 'b').zfill(8)
 
 
-
 class Player(Agent):
     def __init__(self,x,y):
         super().__init__(x,y)
         self.c = (255,255,255)
 
-    def live(self, grid):
+    def live(self, grid, reward):
         # Calculate delta_x and delta_y
         delta_x = 0
         delta_y = 0
 
-        # Infinite life
-        self.life += 10
+        # DEBUG: Infinite life
+        ##self.life += 10
         
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_UP]: delta_y -= 3

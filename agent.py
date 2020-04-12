@@ -20,9 +20,15 @@ class Agent:
 
     def eat(self, grid):
         c = grid.get_cell(self.x,self.y) 
-        if (c.life > 10):
-            c.life -= 10
-            self.life += 10
+        if (c.type == "Square"):
+            if (c.life > 10):
+                c.life -= 10
+                self.life += 10
+                return 10
+            return 0
+        elif (c.type == "Water"):
+            self.life -= 1
+            return -1
 
     def move(self, delta_x, delta_y):
         self.x += delta_x
@@ -38,7 +44,7 @@ class Agent:
         if (self.y + agent_size > w_height):
             self.y = 0
 
-    def live(self, grid):
+    def live(self, grid, reward):
         # The brains of the agent
         c = grid.get_cell(self.x,self.y)
 
@@ -49,7 +55,6 @@ class Agent:
             delta_x = agent_size
         if(random.random() < 0.02):
             delta_x = -agent_size
-            print(self.x, self.y)
         if(random.random() < 0.03):
             delta_y = agent_size
         if(random.random() < 0.04):
@@ -62,8 +67,8 @@ class Agent:
         if (self.life > max_life):
             self.life = max_life
 
-        self.live(grid)
-        self.eat(grid)
+        reward = self.eat(grid)
+        self.live(grid, reward)
 
     def draw(self,screen):
         pygame.draw.circle(screen, self.c, (self.x, self.y), agent_size//2)

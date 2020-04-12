@@ -1,40 +1,13 @@
 import pygame
 import random
 
+from materials import *
 import settings
 
 w_width = settings.w_width
 w_height = settings.w_height
 square_size = settings.square_size
-max_square_life = 100
 
-class Square:
-    def __init__(self,x,y):
-        self.x = x
-        self.y = y
-        self.life = random.random() * max_square_life
-
-        self.r = 0
-        self.g = 0
-        self.b = 0
-
-    def run(self):
-        x = random.random()
-        if (x < 0.4):
-            self.life -= 1
-        elif (x < 0.8):
-            self.life += 1
-        # Sanity checks
-        if(self.life < 0):
-            self.life = 0.0
-        elif(self.life > max_square_life):
-            self.life = float(max_square_life)
-
-    def draw(self,screen):
-        self.g = int( (self.life/max_square_life) * 255 )
-        c = (self.r,self.g,self.b)
-        pygame.draw.rect(screen, c, pygame.Rect(self.x, self.y, square_size, square_size))
-        self.r = 0
 
 class Grid:
     def __init__(self, w_width, w_height, screen):
@@ -50,7 +23,10 @@ class Grid:
                 x = i*square_size
                 y = j*square_size
 
-                self.cells[i][j] = (Square(x,y))
+                if (random.random() * x < 0.8 * y):
+                    self.cells[i][j] = (Water(x,y))
+                else:
+                    self.cells[i][j] = (Square(x,y))
     
     def run(self):
         for i in self.cells:

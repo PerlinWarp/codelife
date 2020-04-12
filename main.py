@@ -1,11 +1,14 @@
 import pygame
 import numpy as np
+import random
 
 import settings
 from grid import Grid
 from agent import Agent
 from agent2 import Agent2
 from player_agent import Player
+from gen_agent import Gen_agent
+from p_agent import P_agent
 
 pygame.init()
 w_width = settings.w_width
@@ -21,6 +24,10 @@ grid.draw(screen)
 agent = Agent2(0, w_height//2)
 player = Player(w_width//2, w_height//2)
 agents = [agent, player]
+
+# Make the genetic agents
+for i in range(0,10):
+    agents.append(P_agent(w_width//2, w_height//3 + random.randint(0,10)*10))
 
 while not done:
         for event in pygame.event.get():
