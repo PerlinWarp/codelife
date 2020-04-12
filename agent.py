@@ -47,7 +47,7 @@ class Agent:
         delta_y = 0
         if(random.random() < 0.01):
             delta_x = agent_size
-        if(random.random() < 0.9):
+        if(random.random() < 0.02):
             delta_x = -agent_size
             print(self.x, self.y)
         if(random.random() < 0.03):
@@ -66,4 +66,4 @@ class Agent:
         self.eat(grid)
 
     def draw(self,screen):
-        pygame.draw.circle(screen, self.c, (self.x, self.y), square_size//4)
+        pygame.draw.circle(screen, self.c, (self.x, self.y), agent_size//2)
