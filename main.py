@@ -17,7 +17,7 @@ grid = Grid(w_width, w_height, screen)
 grid.draw(screen)
 
 # Making an agent
-agent = Agent2(w_width//2, w_height//2)
+agent = Agent2(0, w_height//2)
 
 while not done:
         for event in pygame.event.get():

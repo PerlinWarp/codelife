@@ -16,7 +16,7 @@ class Agent:
         self.life = max_life
         self.alive_time = 0
 
-        self.c = (0,0,255)
+        self.c = (255,0,255)
 
     def eat(self, grid):
         c = grid.get_cell(self.x,self.y) 
@@ -29,14 +29,14 @@ class Agent:
         self.y += delta_y
 
         # Sanity checks
-        if(self.x < 0):
-            self.x = 0
-        if(self.y < 0):
-            self.y = 0
+        if(self.x <= 0):
+            self.x = w_width - agent_size
+        if(self.y <= 0):
+            self.y = w_height - agent_size
         if (self.x + agent_size > w_width):
-            self.x = w_width 
-        if (self.y + agent_size> w_height):
-            self.y = w_height
+            self.x = 0
+        if (self.y + agent_size > w_height):
+            self.y = 0
 
     def live(self, grid):
         # The brains of the agent
@@ -47,8 +47,9 @@ class Agent:
         delta_y = 0
         if(random.random() < 0.01):
             delta_x = agent_size
-        if(random.random() < 0.02):
+        if(random.random() < 0.9):
             delta_x = -agent_size
+            print(self.x, self.y)
         if(random.random() < 0.03):
             delta_y = agent_size
         if(random.random() < 0.04):
