@@ -53,7 +53,6 @@ class P_agent(Agent):
         #c = grid.get_cell(self.x,self.y)
 
         # Convert inputs to binary
-        print("C:", c)
         a = g/255 # Normalise our input 
         print("a: ", a)
 

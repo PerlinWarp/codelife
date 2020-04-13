@@ -4,9 +4,48 @@ import numpy as np
 # Helper functions 
 get_bin = lambda x, n: format(a, 'b').zfill(8)
 
-def sigmoid(z):
-    #Apply sigmoid activation function to scalar, vector, or matrix
-    return 1/(1+np.exp(-z))
+class LookUpTable():
+    def __init__(self):
+        self.memory = {} # (0,0,255) : [0,0,0,10]
+        self.actions = ["left", "right", "up", "down"]
+        self.inv_actions = {"left":0, "right":1, "up":2, "down":3}
+
+    def predict(self,x):
+        if x in self.memory:
+            # Look up the stimulus in our memory
+            memory_of_stimulus = self.memory[x]
+
+            # Pick the best action we know
+            action_index = np.argmax(memory_of_stimulus)
+            return self.actions[action_index]
+        else:
+            # We havent seen this input before, pick random
+                        # left, right, up, down
+            self.memory[x] = [0,     0,     0,    0]
+
+            r = random.random()
+            if (r < 0.25):
+                return "left"
+            elif (r < 0.5):
+                return "right"
+            elif (r < 0.75):
+                return "up"
+            else:
+                return "down"
+
+    def update(self,last_input, last_action, reward):
+        # Turn "right" into 1
+        action_num = self.inv_actions[last_action]
+
+
+        if last_input in self.memory:
+            # We have seen it before, update our score
+            self.memory[last_input][action_num] += reward
+        else:
+            # We have not seen it before
+            new_memory = [0,0,0,0]
+            new_memory[action_num] = reward
+            self.memory[last_input] = new_memory
 
 
 class RL_agent(Agent):
@@ -18,133 +57,44 @@ class RL_agent(Agent):
     input_size = 1
     hidden_layer_size = 1
 
-    def __init__(self,x,y):
+    def __init__(self,x,y,grid):
         super().__init__(x,y)
         self.type = "RL"
         self.c = (random.randint(0,255),random.randint(0,255),255)
 
-        # Weights of the neural network
-        self.W_X = random.random()
-        self.W_Y = random.random()
-        self.learning_rate = 0.01
+        # Make our look up table brain
+        self.brain = LookUpTable()
 
-        self.delta_x = 0
-        self.delta_y = 0
+        # Get an inital input
+        c = grid.get_cell(self.x,self.y)
+        senses = (c.r, c.g, c.b)
+        self.last_input = senses
+        self.last_action = "up"
 
     def live(self, grid, reward):
-        # Backpropagate our reward from our last action
-        max_reward = 10
-        error = max_reward - reward 
-        delta_weight_x = error * self.delta_x
-        delta_weight_y = error * self.delta_y
+        # Update our look up table based on the last reward
+        self.brain.update(self.last_input, self.last_action, reward)
 
-        self.W_X += delta_weight_x * self.learning_rate
-        self.W_Y += delta_weight_y * self.learning_rate
 
-        self.delta_x = 0
-        self.delta_y = 0
-
-        # Get our input 
+        # Get our new input 
         c = grid.get_cell(self.x,self.y)
-        r = c.r
-        g = c.g
-        b = c.b
+        self.last_input = (c.r, c.g, c.b)
 
-        #Get the cell infront of us
-        #c = grid.get_cell(self.x,self.y)
-
-        # Convert inputs to binary
-        a = g/255 # Normalise our input 
-        print("a: ", a)
-
-        # Propagate through the net 
-        x_out = a * self.W_X
-        y_out = a * self.W_Y
-
-        #x_out = sigmoid(x_out)
-        #y_out = sigmoid(y_out)
-
-        print(x_out, y_out)
-
+        # Ask our brain what to do given our new input
+        self.last_action = self.brain.predict(self.last_input)
+        
         # Prediction
-        if(x_out > 0):
-            self.delta_x = agent_size
-        else:
-            self.delta_x = -agent_size
-
-        if (y_out > 0):
-            self.delta_y = agent_size
-        else:
-            self.delta_y = -agent_size
-
-        super().move(self.delta_x,self.delta_y)
-
-class P_agent2(Agent):
-    '''
-    An agent which uses a perceptron as a brain 
-    Inputs are green pixel
-    Ouput is x and y movements being either forward or backwards
-    '''
-    input_size = 1
-    hidden_layer_size = 1
-
-    def __init__(self,x,y):
-        super().__init__(x,y)
-        self.c = (random.randint(0,255),random.randint(0,255),255)
-
-        # Weights of the neural network
-        self.W_X = random.random()
-        self.W_Y = random.random()
-        self.learning_rate = 0.01
-
         self.delta_x = 0
         self.delta_y = 0
-
-    def live(self, grid, reward):
-        # Backpropagate our reward from our last action
-        max_reward = 10
-        error = max_reward - reward 
-        delta_weight_x = error * self.delta_x
-        delta_weight_y = error * self.delta_y
-
-        self.W_X += delta_weight_x * self.learning_rate
-        self.W_Y += delta_weight_y * self.learning_rate
-
-        self.delta_x = 0
-        self.delta_y = 0
-
-        # Get our input 
-        c = grid.get_cell(self.x,self.y)
-        r = c.r
-        g = c.g
-        b = c.b
-
-        #Get the cell infront of us
-        #c = grid.get_cell(self.x,self.y)
-
-        # Convert inputs to binary
-        print("C:", c)
-        a = g/255 # Normalise our input 
-        print("a: ", a)
-
-        # Propagate through the net 
-        x_out = a * self.W_X
-        y_out = a * self.W_Y
-
-        #x_out = sigmoid(x_out)
-        #y_out = sigmoid(y_out)
-
-        print(x_out, y_out)
-
-        # Prediction
-        if(x_out > 0):
+        if(self.last_action == "right"):
             self.delta_x = agent_size
-        else:
+        elif(self.last_action == "left"):
             self.delta_x = -agent_size
-
-        if (y_out > 0):
+        elif(self.last_action == "up"):
             self.delta_y = agent_size
-        else:
+        elif(self.last_action == "down"):
             self.delta_y = -agent_size
+        else:
+            raise ValueError("Invalid output")
 
         super().move(self.delta_x,self.delta_y)

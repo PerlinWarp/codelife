@@ -7,6 +7,7 @@ get_bin = lambda x, n: format(a, 'b').zfill(8)
 class Player(Agent):
     def __init__(self,x,y):
         super().__init__(x,y)
+        self.type = "Player"
         self.c = (255,255,255)
 
     def live(self, grid, reward):
