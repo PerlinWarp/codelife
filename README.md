@@ -6,7 +6,7 @@ Alife simulations built with NumPy and Pygame.
 python3 main.py
 ```
 
-## Initial World
+## Initial World (600 Lines of Code)
 Each agent starts with a life of 100 frames. If agents go onto a grassy cell and eat it they get an extra 10 frames to live. Swimming in the water reduces their life by 10 frames per frame in the water. Grass grows back in a randomised way. 
 
 After 2 days of programming, a simple program was made with a few different agents: 

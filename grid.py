@@ -8,6 +8,18 @@ w_width = settings.w_width
 w_height = settings.w_height
 square_size = settings.square_size
 
+def world_builder(x,y):
+    r = random.random()
+    circle = (x - w_width//2)**2 + (y - w_height//2)**2
+
+    if (r < 0.01):
+        return Lava(x,y)
+    if (circle < r * 150**2):
+        return Square(x,y)
+    if (circle < r * 300**2):
+        return Grass(x,y)
+    else:
+        return Water(x,y)
 
 class Grid:
     def __init__(self, w_width, w_height, screen):
@@ -17,16 +29,11 @@ class Grid:
 
         self.cells = [[0 for i in range(rows)] for j in range(cols)]
 
-
         for i in range(0, cols):
             for j in range(0, rows):
                 x = i*square_size
                 y = j*square_size
-
-                if (random.random() * x < 0.8 * y):
-                    self.cells[i][j] = (Water(x,y))
-                else:
-                    self.cells[i][j] = (Square(x,y))
+                self.cells[i][j] = world_builder(x,y)
     
     def run(self):
         for i in self.cells:
@@ -49,10 +56,6 @@ class Grid:
     def set_cell(self,x,y,life):
         x = x//square_size
         y = y//square_size
-
-        # Convert the world position into cell position 
-        print("cell_x:", x, "/",len(self.cells[0]))
-        print("cell_y:", y, "/", len(self.cells))
 
         s = self.cells[x][y]
         s.life -= life;

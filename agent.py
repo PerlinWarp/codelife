@@ -16,11 +16,12 @@ class Agent:
         self.life = max_life
         self.alive_time = 0
 
+        self.type = "Agent"
         self.c = (255,0,255)
 
     def eat(self, grid):
         c = grid.get_cell(self.x,self.y) 
-        if (c.type == "Square"):
+        if (c.type == "Grass"):
             if (c.life > 10):
                 c.life -= 10
                 self.life += 10
@@ -29,6 +30,11 @@ class Agent:
         elif (c.type == "Water"):
             self.life -= 1
             return -1
+        elif (c.type == "Lava"):
+            self.life -= 10
+            return -10
+        elif (c.type == "Square"):
+            return 0
 
     def move(self, delta_x, delta_y):
         self.x += delta_x

@@ -8,6 +8,7 @@ get_bin = lambda x, n: format(a, 'b').zfill(8)
 class Agent2(Agent):
     def __init__(self,x,y):
         super().__init__(x,y)
+        self.type = "Agent2"
 
     def live(self, grid, reward):
         c = grid.get_cell(self.x,self.y)

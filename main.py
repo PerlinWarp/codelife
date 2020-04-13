@@ -9,6 +9,7 @@ from agent2 import Agent2
 from player_agent import Player
 from gen_agent import Gen_agent
 from p_agent import P_agent
+from nn_agent import NN_agent
 
 pygame.init()
 w_width = settings.w_width
@@ -29,6 +30,9 @@ agents = [agent, player]
 for i in range(0,10):
     agents.append(P_agent(w_width//2, w_height//3 + random.randint(0,10)*10))
 
+for i in range(0,10):
+    agents.append(NN_agent(w_width//2, w_height//3 + random.randint(0,10)*10))
+
 while not done:
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -42,7 +46,8 @@ while not done:
         for agent in agents:
             if (agent):
                 if (agent.life < 1):
-                        print("Agent died after: ", agent.alive_time)
+                        print("Agent:", agent.type, "died after: ", agent.alive_time)
+                        print(len(agents),"still alive")
                         agents.remove(agent)
                         del agent
                 else:

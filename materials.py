@@ -11,6 +11,23 @@ class Square:
         self.type = "Square"
         self.x = x
         self.y = y
+        self.life = 0
+
+        self.r = 128
+        self.g = 128
+        self.b = 128
+
+    def run(self):
+        pass
+
+    def draw(self,screen):
+        c = (self.r,self.g,self.b)
+        pygame.draw.rect(screen, c, pygame.Rect(self.x, self.y, Square.size, Square.size))
+
+class Grass(Square):
+    def __init__(self,x,y):
+        super().__init__(x,y)
+        self.type = "Grass"
 
         self.life = random.random() * Square.max_life
 
@@ -36,6 +53,7 @@ class Square:
         pygame.draw.rect(screen, c, pygame.Rect(self.x, self.y, Square.size, Square.size))
         self.r = 0
 
+
 class Water(Square):
     def __init__(self,x,y):
         super().__init__(x,y)
@@ -50,4 +68,23 @@ class Water(Square):
 
     def draw(self,screen):
         c = (self.r,self.g,self.b)
+        pygame.draw.rect(screen, c, pygame.Rect(self.x, self.y, Square.size, Square.size))
+
+class Lava(Square):
+    def __init__(self,x,y):
+        super().__init__(x,y)
+        self.type = "Lava"
+        self.life = 0
+        self.r = 255
+        self.g = 160
+        self.b = 0
+
+    def run(self):
+        return
+
+    def draw(self,screen):
+        if (random.random() < 0.2):
+            c = (255,50,0)
+        else:
+            c = (self.r,self.g,self.b)
         pygame.draw.rect(screen, c, pygame.Rect(self.x, self.y, Square.size, Square.size))
