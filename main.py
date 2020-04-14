@@ -9,7 +9,7 @@ from agent2 import Agent2
 from player_agent import Player
 from gen_agent import Gen_agent
 from p_agent import P_agent
-from rl_agent import RL_agent
+from rl_agent import RL_agent, RL_agent2, RRL_agent
 
 pygame.init()
 w_width = settings.w_width
@@ -30,9 +30,14 @@ agents = [agent, player]
 for i in range(0,10):
     agents.append(P_agent(random.randint(0,w_width), random.randint(0,w_height)))
 
-
 for i in range(0,10):
     agents.append(RL_agent(random.randint(0,w_width), random.randint(0,w_height),grid))
+
+for i in range(0,10):
+    agents.append(RL_agent2(random.randint(0,w_width), random.randint(0,w_height),grid))
+
+for i in range(0,10):
+    agents.append(RRL_agent(random.randint(0,w_width), random.randint(0,w_height),grid))
 
 while not done:
         for event in pygame.event.get():

@@ -1,10 +1,12 @@
 from agent import *
 import numpy as np
 
-# Helper functions 
-get_bin = lambda x, n: format(a, 'b').zfill(8)
-
 class LookUpTable():
+    '''
+    Note that the look up table is independent of input, 
+    aslong as it is hashable. and therefore does not need to 
+    be redefined per agent senses. 
+    '''
     def __init__(self):
         self.memory = {} # (0,0,255) : [0,0,0,10]
         self.actions = ["left", "right", "up", "down"]
@@ -50,13 +52,10 @@ class LookUpTable():
 
 class RL_agent(Agent):
     '''
-    An agent which uses a perceptron as a brain 
-    Inputs are green pixel
-    Ouput is x and y movements being either forward or backwards
+    An agent which uses a LookUpTable as a brain 
+    Inputs are RGB of the cell they are on. 
+    Ouput is one of, Up, Down, Left or Right 
     '''
-    input_size = 1
-    hidden_layer_size = 1
-
     def __init__(self,x,y,grid):
         super().__init__(x,y)
         self.type = "RL"
@@ -98,3 +97,88 @@ class RL_agent(Agent):
             raise ValueError("Invalid output")
 
         super().move(self.delta_x,self.delta_y)
+
+
+class RL_agent2(Agent):
+    '''
+    An agent which uses a LookUpTable as a brain 
+    Inputs are RGB of the cell they are on. 
+    Ouput is one of, Up, Down, Left or Right 
+    '''
+
+    def __init__(self,x,y,grid):
+        super().__init__(x,y)
+        self.type = "RL_2"
+        self.c = (random.randint(0,255),random.randint(0,255),120)
+
+        # Make our look up table brain
+        self.brain = LookUpTable()
+
+        # Get an inital input
+        c = grid.get_cell(self.x,self.y)
+        senses = (c.r, c.g, c.b)
+        self.last_input = senses
+        self.last_action = "up"
+
+    def live(self, grid, reward):
+        # Update our look up table based on the last reward
+        self.brain.update(self.last_input, self.last_action, reward)
+
+
+        last_input = self.last_input
+        # Get the cell we are standing on
+        c = grid.get_cell(self.x,self.y)
+        self.last_input = (c.r, c.g, c.b)
+        # 255^3 * 255^3 * 4 = 1.099768e+15
+        sense = (self.last_action, last_input, self.last_input)
+        # Ask our brain what to do given our new input
+        self.last_action = self.brain.predict(sense)
+        
+        # Prediction
+        self.delta_x = 0
+        self.delta_y = 0
+        if(self.last_action == "right"):
+            self.delta_x = agent_size
+        elif(self.last_action == "left"):
+            self.delta_x = -agent_size
+        elif(self.last_action == "up"):
+            self.delta_y = agent_size
+        elif(self.last_action == "down"):
+            self.delta_y = -agent_size
+        else:
+            raise ValueError("Invalid output")
+
+        super().move(self.delta_x,self.delta_y)
+
+
+class RandomisedLookUpTable(LookUpTable):
+    '''
+    The look up table will always do what it thinks it should
+    It needs to explore other options than the first one given to it
+    Enter the explore vs exploit question.
+    '''
+    def __init__(self):
+        super().__init__()
+
+    def predict(self,x):
+        r = random.random()
+
+        if (r < 0.02):
+            return random.choice(self.actions)
+        else:
+            return super().predict(x)
+
+class RRL_agent(RL_agent):
+    def __init__(self,x,y,grid):
+        super().__init__(x,y,grid)
+        self.type = "RRL"
+        self.c = (random.randint(0,255),random.randint(0,255),255)
+
+        # Make our look up table brain
+        self.brain = RandomisedLookUpTable()
+
+        # Get an inital input
+        c = grid.get_cell(self.x,self.y)
+        senses = (c.r, c.g, c.b)
+        self.last_input = senses
+        self.last_action = "up"

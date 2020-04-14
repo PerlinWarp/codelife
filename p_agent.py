@@ -55,7 +55,6 @@ class P_agent(Agent):
 
         # Convert inputs to binary
         a = g/255 # Normalise our input 
-        print("a: ", a)
 
         # Propagate through the net 
         x_out = a * self.W_X
@@ -64,7 +63,7 @@ class P_agent(Agent):
         #x_out = sigmoid(x_out)
         #y_out = sigmoid(y_out)
 
-        print(x_out, y_out)
+        #print(x_out, y_out)
 
         # Prediction
         if(x_out > 0):
