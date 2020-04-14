@@ -21,7 +21,7 @@ After 2 days of programming, a simple program was made with a few different agen
 In this gif, we see many percepron agents die but some perceptron agents finding a local minima of flying across the screen diagonally. 
 
 
-## World Version 2 (Day 3)
+## World Version 2 (1115 LOC - Day 3)
 #### Strongest Agent - Reinforcement Learning 
 
 * Added lava blocks which reduce an agent's life by 10 frames.

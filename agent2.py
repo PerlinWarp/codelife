@@ -24,7 +24,6 @@ class Agent2(Agent):
         a = np.unpackbits(a)
 
 
-
         # Calculate delta_x and delta_y
         delta_x = 0
         delta_y = 0

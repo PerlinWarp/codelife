@@ -28,10 +28,11 @@ agents = [agent, player]
 
 # Make the genetic agents
 for i in range(0,10):
-    agents.append(P_agent(w_width//2, w_height//3 + random.randint(0,10)*10))
+    agents.append(P_agent(random.randint(0,w_width), random.randint(0,w_height)))
+
 
 for i in range(0,10):
-    agents.append(RL_agent(w_width//2, w_height//3 + random.randint(0,10)*10, grid))
+    agents.append(RL_agent(random.randint(0,w_width), random.randint(0,w_height),grid))
 
 while not done:
         for event in pygame.event.get():
@@ -47,7 +48,7 @@ while not done:
             if (agent):
                 if (agent.life < 1):
                         print("Agent:", agent.type, "died after: ", agent.alive_time)
-                        print(len(agents),"still alive")
+                        print(len(agents)-1,"still alive")
                         agents.remove(agent)
                         del agent
                 else:

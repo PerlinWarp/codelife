@@ -20,6 +20,7 @@ class P_agent(Agent):
 
     def __init__(self,x,y):
         super().__init__(x,y)
+        self.type = "Perceptron"
         self.c = (random.randint(0,255),random.randint(0,255),255)
 
         # Weights of the neural network
@@ -89,7 +90,7 @@ class P_agent2(Agent):
 
     def __init__(self,x,y):
         super().__init__(x,y)
-        self.type = "Player"
+        self.type = "Perceptron"
         self.c = (random.randint(0,255),random.randint(0,255),255)
 
         # Weights of the neural network
