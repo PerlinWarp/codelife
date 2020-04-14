@@ -32,11 +32,12 @@ In this gif, we see many percepron agents die but some perceptron agents finding
 
 ![World 2 with Reinforcement Agents winning](https://raw.githubusercontent.com/PerlinWarp/YearOfAI/master/media/codelife_rl.gif)
 
-Best Random Agent Score: 50
-Best Perceptron Agent Score: 263
-Best RL_Agent Score: 670 (Input RGB of current grid)
-Best RLL_Agent Score: 2375 (RL_Agent with random choice 2% of the time)
-Best RL_Agent2 Score: 5329 (Input RBG of current and last grid + memory of last action )
+### Agent Highscores (How many frames the agents lived for)
+Best Random Agent Score: 50  
+Best Perceptron Agent Score: 263  
+Best RL_Agent Score: 670 (Input: RGB of current square)  
+Best RLL_Agent Score: 2375 (RL_Agent with random choice 2% of the time)  
+Best RL_Agent2 Score: 5329 (Input: RBG of current and last square colour + memory of last action)  
 
 
 ### TODO
