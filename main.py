@@ -6,7 +6,7 @@ import settings
 from grid import Grid
 from agent import Agent
 from rand_agent import Rand_agent
-from player_agent import Player
+from player_agent import Player, Player2
 from gen_agent import Gen_agent, Population
 from p_agent import P_agent
 from rl_agent import RL_agent, RL_agent2, RRL_agent
@@ -23,7 +23,7 @@ grid.draw(screen)
 
 # Making an agent
 agent = Rand_agent(0, w_height//2)
-player = Player(w_width//2, w_height//2)
+player = Player2(w_width//2, w_height//2)
 agents = [agent, player]
 
 # # Make the normal agents
