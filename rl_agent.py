@@ -209,7 +209,7 @@ class R_LookUpTable():
         else:
             # We havent seen this input before, pick random
                         # left, right, up, down
-            self.memory[x] = [0,     0,     0]
+            self.memory[x] = [0,     0,     1]
 
             r = random.random()
             if (r < 0.10):
@@ -233,6 +233,8 @@ class R_LookUpTable():
             new_memory[action_num] = reward
             self.memory[last_input] = new_memory
 
+    def __repr__(self):
+        return str(self.memory)
 
 class RL_agentRot(Agent2):
     '''
@@ -251,21 +253,23 @@ class RL_agentRot(Agent2):
         # Get an inital input
         c = grid.get_cell(self.x,self.y)
         c_n = grid.get_cell(self.infront_x,self.infront_y)
-        senses = (self.degrees, c.r, c.g, c.b, c_n, c_n.g, c_n.b)
+        senses = (self.degrees, c.r, c.g, c.b, c_n.r, c_n.g, c_n.b)
         self.last_input = senses
         self.last_action = "forward"
 
     def live(self, grid, reward):
         # Update our look up table based on the last reward
         self.brain.update(self.last_input, self.last_action, reward)
-
+        self.life += 10
 
         # Get our new input 
         c = grid.get_cell(self.x,self.y)
         c_n = grid.get_cell(self.infront_x,self.infront_y)
-        self.last_input = (self.degrees, c.r, c.g, c.b, c_n, c_n.g, c_n.b)
-
+        self.last_input = (self.degrees, c.r, c.g, c.b, c_n.r, c_n.g, c_n.b)
+        print("Input: ", self.degrees, "C:", c.type, "C-n", c_n.type)
+        print(self.brain)
         # Ask our brain what to do given our new input
         self.last_action = self.brain.predict(self.last_input)
+        print("Output: ", self.last_action)
 
         super().move(self.last_action)
