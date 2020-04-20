@@ -46,7 +46,12 @@ This caused me to make a new agent, which can sense the colour of the block it i
 I expected this to give a much greater performance as an agent would be able to look at all the blocks surrounding it and always pick the best option. 
 
 #### A problem emerges. 
-To test out the new agent, I tried it with my best performing agent's brain, RL2, but this newly formed agent often comes into a problem where it just spins around repeating a sequence of actions. 
+To test out the new agent, I tried it with my best performing agent's brain, RL2, but this newly formed agent often comes into a problem where it just spins around repeating a sequence of actions.
+
+![Pink RL Agent stuck spinning in a circle](https://raw.githubusercontent.com/PerlinWarp/YearOfAI/master/media/Spinning.gif) 
+
+Above we see the pink agent is stuck in this spinning loop. 
+
 
 ### TODO
 Agents:
