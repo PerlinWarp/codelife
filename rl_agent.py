@@ -204,12 +204,15 @@ class R_LookUpTable():
             memory_of_stimulus = self.memory[x]
 
             # Pick the best action we know
-            action_index = np.argmax(memory_of_stimulus)
-            return self.actions[action_index]
+            if (max(memory_of_stimulus) < 0):
+                return random.choice(self.actions)
+            else:
+                action = random.choices(population=self.actions, weights=memory_of_stimulus, k=1)[0]
+                return action
         else:
             # We havent seen this input before, pick random
                         # left, right, up, down
-            self.memory[x] = [0,     0,     1]
+            self.memory[x] = [random.randint(0,10),     random.randint(0,10),     random.randint(0,10)]
 
             r = random.random()
             if (r < 0.10):
@@ -260,16 +263,15 @@ class RL_agentRot(Agent2):
     def live(self, grid, reward):
         # Update our look up table based on the last reward
         self.brain.update(self.last_input, self.last_action, reward)
-        self.life += 10
 
         # Get our new input 
         c = grid.get_cell(self.x,self.y)
         c_n = grid.get_cell(self.infront_x,self.infront_y)
         self.last_input = (self.degrees, c.r, c.g, c.b, c_n.r, c_n.g, c_n.b)
-        print("Input: ", self.degrees, "C:", c.type, "C-n", c_n.type)
-        print(self.brain)
+        #print("Input: ", self.degrees, "C:", c.type, "C-n", c_n.type)
+        #print(self.brain)
         # Ask our brain what to do given our new input
         self.last_action = self.brain.predict(self.last_input)
-        print("Output: ", self.last_action)
+        #print("Output: ", self.last_action)
 
         super().move(self.last_action)

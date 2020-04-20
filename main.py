@@ -27,7 +27,8 @@ player = Player2(w_width//2, w_height//2)
 agents = [agent, player]
 
 # # Make the normal agents
-agents.append(RL_agentRot(random.randint(0,w_width-10), random.randint(0,w_height-10), grid))
+for i in range(0,10):
+    agents.append(RL_agentRot(random.randint(0,w_width-10), random.randint(0,w_height-10), grid))
 
 
 # # Make a population of genetic agents
