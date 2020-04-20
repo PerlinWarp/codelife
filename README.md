@@ -39,6 +39,14 @@ Best RL_Agent Score: 670 (Input: RGB of current square)
 Best RLL_Agent Score: 2375 (RL_Agent with random choice 2% of the time)  
 Best RL_Agent2 Score: 5329 (Input: RBG of current and last square colour + memory of last action)  
 
+### New Agent (1650 LOC)
+An Agent should be able to see more than just the cell it is on to make a proper decision about where to go.
+This caused me to make a new agent, which can sense the colour of the block it is standing on but also has an antenna which allows it to sense the block infront. It can then move either forwards or turn either left or right. 
+
+I expected this to give a much greater performance as an agent would be able to look at all the blocks surrounding it and always pick the best option. 
+
+#### A problem emerges. 
+To test out the new agent, I tried it with my best performing agent's brain, RL2, but this newly formed agent often comes into a problem where it just spins around repeating a sequence of actions. 
 
 ### TODO
 Agents:
@@ -48,3 +56,4 @@ Agents:
 * RNN agents 
 * Interactive Particle system 
 * Dynamic Enviroment/grid
+
