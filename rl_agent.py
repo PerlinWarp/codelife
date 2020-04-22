@@ -7,6 +7,7 @@ class LookUpTable():
     Note that the look up table is independent of input, 
     aslong as it is hashable. and therefore does not need to 
     be redefined per agent senses. 
+    Q(S,A) <- Q(S,A) + r
     '''
     def __init__(self):
         self.memory = {} # (0,0,255) : [0,0,0,10]
@@ -184,60 +185,46 @@ class RRL_agent(RL_agent):
         self.last_input = senses
         self.last_action = "up"
 
-class R_LookUpTable():
+class Q_Table():
     '''
     Note that the look up table is independent of input, 
     aslong as it is hashable. and therefore does not need to 
     be redefined per agent senses. 
     '''
     def __init__(self):
-        self.memory = {} # (0,0,255) : [0,0,10]
+        self.q_table = {} # (0,0,255) : [0,0,10]
         self.actions = ["left", "right", "forward"]
         self.inv_actions = {"left":0, "right":1, "forward":2}
 
-    def predict(self,x):
-        if x in self.memory:
-            r = random.random()
-            if (r < 0.05): return random.choice(self.actions)
+        # Hyper Parameters
+        self.learning_rate = 0.05
+        self.epsilon = 1
+        self.discount = 0.5
 
-            # Look up the stimulus in our memory
-            memory_of_stimulus = self.memory[x]
-
-            # Pick the best action we know
-            if (max(memory_of_stimulus) < 0):
-                return random.choice(self.actions)
-            else:
-                action = random.choices(population=self.actions, weights=memory_of_stimulus, k=1)[0]
-                return action
+    def predict(self,state,life):
+        self.epsilon = life / 100
+        if state in self.q_table and np.random.random() > self.epsilon:
+            return np.argmax(self.q_table[state])
         else:
-            # We havent seen this input before, pick random
-                        # left, right, up, down
-            self.memory[x] = [random.randint(0,10),     random.randint(0,10),     random.randint(0,10)]
+            return random.choice(self.actions)
 
-            r = random.random()
-            if (r < 0.10):
-                return "left"
-            elif (r < 0.20):
-                return "right"
-            else:
-                return "forward"
 
-    def update(self,last_input, last_action, reward):
+    def update(self, last_state, last_action, new_state, reward):
         # Turn "right" into 1
         action_num = self.inv_actions[last_action]
 
+        if new_state in self.q_table:
+            max_future_q = np.max(self.q_table[new_state]) 
+        else: max_future_q = 0
 
-        if last_input in self.memory:
+        if last_state in self.q_table:
             # We have seen it before, update our score
-            self.memory[last_input][action_num] += reward
-        else:
-            # We have not seen it before
-            new_memory = [0,0,0]
-            new_memory[action_num] = reward
-            self.memory[last_input] = new_memory
+            current_q = q_table[last_state][last_action]
+            new_q = (1 - self.learning_rate) * current_q + self.learning_rate*(reward + self.discount * max_future_q)
+            self.memory[last_input][action_num] += new_q
 
     def __repr__(self):
-        return str(self.memory)
+        return str(self.q_table)
 
 class RL_agentRot(Agent2):
     '''
@@ -251,27 +238,30 @@ class RL_agentRot(Agent2):
         self.c = (random.randint(0,255),random.randint(0,255),255)
 
         # Make our look up table brain
-        self.brain = R_LookUpTable()
+        self.brain = Q_Table()
 
         # Get an inital input
         c = grid.get_cell(self.x,self.y)
         c_n = grid.get_cell(self.infront_x,self.infront_y)
         senses = (self.degrees, c.r, c.g, c.b, c_n.r, c_n.g, c_n.b)
-        self.last_input = senses
+        self.input = senses
         self.last_action = "forward"
 
     def live(self, grid, reward):
-        # Update our look up table based on the last reward
-        self.brain.update(self.last_input, self.last_action, reward)
-
+        last_input = self.input
         # Get our new input 
         c = grid.get_cell(self.x,self.y)
         c_n = grid.get_cell(self.infront_x,self.infront_y)
-        self.last_input = (self.degrees, c.r, c.g, c.b, c_n.r, c_n.g, c_n.b)
+        self.input = (self.degrees, c.r, c.g, c.b, c_n.r, c_n.g, c_n.b)
+
+        # Update our look up table based on the last reward
+       #update(last_state, last_action, new_state, reward):
+        self.brain.update(last_input, self.last_action,self.input, reward)
+
         #print("Input: ", self.degrees, "C:", c.type, "C-n", c_n.type)
         #print(self.brain)
         # Ask our brain what to do given our new input
-        self.last_action = self.brain.predict(self.last_input)
+        self.last_action = self.brain.predict(self.input, self.life)
         #print("Output: ", self.last_action)
 
         super().move(self.last_action)
