@@ -9,7 +9,8 @@ from rand_agent import Rand_agent
 from player_agent import Player, Player2
 from gen_agent import Gen_agent, Population
 from p_agent import P_agent
-from rl_agent import RL_agent, RL_agent2, RRL_agent, RL_agentRot
+from rl_agent import RL_agent, RL_agent2, RRL_agent
+import q_agent
 
 pygame.init()
 w_width = settings.w_width
@@ -22,17 +23,13 @@ grid = Grid(w_width, w_height, screen)
 grid.draw(screen)
 
 # Making an agent
-agent = Rand_agent(0, w_height//2)
+agent =  Rand_agent(0, w_height//2)
 player = Player2(w_width//2, w_height//2)
 agents = [agent, player]
 
-# # Make the normal agents
-for i in range(0,10):
-    agents.append(RL_agentRot(random.randint(0,w_width-10), random.randint(0,w_height-10), grid))
-
 
 # # Make a population of genetic agents
-#genetic_agents = Population(10, grid, screen)
+genetic_agents = q_agent.Population(10, grid, screen)
 
 while not done:
         for event in pygame.event.get():
@@ -56,6 +53,8 @@ while not done:
                     agent.draw(screen)
 
         # Run the genetic agents
-        #genetic_agents.run()
+        genetic_agents.run()
 
         pygame.display.flip()
+
+genetic_agents.stats()

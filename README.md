@@ -52,10 +52,27 @@ To test out the new agent, I tried it with my best performing agent's brain, RL2
 
 Above we see the pink agent is stuck in this spinning loop. 
 
+The reason this was happening:  
+When the RL agent looks up what to do given its sensory input in its memory, it gets the expected rewards for each action it could take, then takes the action which would give it the highest reward.   
+
+The problem is, all these values were the same, due to me initialising expected rewards to 0. So when the sensory input for neighbouring squares was the same, since the rewards were the same, it would pick the left, get a negative reward, pick forward, get a negative reward, pick left, get a negative reward, pick right...  Initialising the values randomly, fixed this problem. 
+
+## Q Learning
+My best performing RL agents before this point, only cared about immediate reward. Given that an agent could:
+* see a half dead grass patch and move onto it immeditely
+* see a half dead grass patch, rotate left and right, see a fully live grass patch and move onto it. 
+
+I thought that being able make decisions based on long term reward would help a new type of agent beat the 5329 frame high score. Excited at this prospect, I decided to code a new agent which uses a Q Table to make decisions. 
+
+![Q Learning Equation](https://wikimedia.org/api/rest_v1/media/math/render/svg/678cb558a9d59c33ef4810c9618baf34a9577686)
+
+This new type of agent now has some parameters, which I decided to optimise using a genetic algorithm. I track the max, min and average scores of each generation and plot them when I exit the simulation, however the results were not what I was looking for:  
+
+![My genetic algorithm failing to optimise parameters](https://raw.githubusercontent.com/PerlinWarp/YearOfAI/master/media/QTableGA.png)
+
 
 ### TODO
 Agents:
-* Genetic algorithm agents
 * NEAT implimentation
 * Deep Reinforcement Learning Agents 
 * RNN agents 
