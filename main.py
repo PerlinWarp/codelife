@@ -29,7 +29,7 @@ agents = [agent, player]
 
 
 # # Make a population of genetic agents
-genetic_agents = q_agent.Population(10, grid, screen)
+genetic_agents = q_agent.Population(100, grid, screen)
 
 while not done:
         for event in pygame.event.get():

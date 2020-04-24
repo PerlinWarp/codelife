@@ -95,10 +95,16 @@ class Population():
         self.grid = grid
         self.screen = screen
         self.agents = []
+        self.dead_agents = []
+        self.dead_scores = []
         for s in range(size):
             x = random.randint(0,w_width-100)
             y = random.randint(0,w_height-100)
-            self.agents.append(Q_agent(x,y,grid))
+            lr = random.random()
+            e = random.random()
+            d = random.random()
+            baby_brain = Q_Table(lr, e, d)
+            self.agents.append(Q_agent(x,y,grid,brain=baby_brain))
 
         # Metrics
         self.lives = []
@@ -113,8 +119,13 @@ class Population():
         f = random.random()
         d = (a.discount*f + b.discount*(1-f))/2
 
+        # Mutation
         if (random.random() < 0.02):
             lr = lr * 2
+        if (random.random() < 0.02):
+            d = d * 2
+        if (random.random() < 0.02):
+            e = random.random()
 
         baby_brain = Q_Table(lr, e, d)
         return baby_brain
@@ -122,35 +133,23 @@ class Population():
     def breed(self):
         # Returns a new population
         babies = []
-        dad = self.agents[0]
-        mum = self.agents[1]
-
-        for i in range(5):
-            # Have kids
+        # sum(self.dead_scores) should be zero for a prob dist
+        self.dead_scores = np.array(self.dead_scores)/sum(self.dead_scores)
+        for i in range(self.size):
+            mum, dad = np.random.choice(self.dead_agents, 2, p=self.dead_scores)
             x = random.randint(0,w_width-100)
             y = random.randint(0,w_height-100)
             newborn_brain = self.cross_over(mum.brain, dad.brain)
             baby = Q_agent(x,y,self.grid,brain=newborn_brain)
             babies.append(baby)
-
-        for s in range(5):
-            # Add some random kids in there for no reason
-            lr = random.random() * random.randint(-100,100)
-            e = random.random()
-            d = random.random() * random.randint(-100,100)
-            newborn_brain = Q_Table(lr, e, d)
-            x = random.randint(0,w_width-100)
-            y = random.randint(0,w_height-100)
-            baby = Q_agent(x,y,self.grid,brain=newborn_brain)
-            babies.append(baby)
-
         return babies
 
     def run(self):
-        if not(len(self.agents) < 3):
+        if (len(self.agents) > 0):
             for agent in self.agents:
                 if (agent.life < 1):
-                        self.lives.append(agent.alive_time)
+                        self.dead_agents.append(agent)
+                        self.dead_scores.append(agent.alive_time)
                         print(len(self.agents)-1,"still alive")
                         self.agents.remove(agent)
                         del agent
@@ -160,25 +159,29 @@ class Population():
         else:
             # Breed em
             print("New Population")
-            ma = max(self.lives)
-            mi = min(self.lives)
-            av = np.average(self.lives)
+            ma = max(self.dead_scores)
+            mi = min(self.dead_scores)
+            av = np.average(self.dead_scores)
 
             print("Max Life: ",ma)
             print("Min Life: ",mi)
             print("Avg Life: ",av)
-
-            print("lr", self.agents[0].brain.learning_rate)
-            print("d", self.agents[0].brain.discount)
-            print("e", self.agents[0].brain.epsilon)
+            try:
+                print("lr", self.dead_agents[self.size-1].brain.learning_rate)
+                print("d", self.dead_agents[self.size-1].brain.discount)
+                print("e", self.dead_agents[self.size-1].brain.epsilon)
+            except:
+                raise ValueError(self.size, len(self.dead_agents))
 
             self.gens[0].append(ma)
             self.gens[1].append(mi)
             self.gens[2].append(av)
 
-
             babies = self.breed()
             self.agents = babies
+
+            self.dead_agents = []
+            self.dead_scores = []
             self.lives = []
 
     def stats(self):
