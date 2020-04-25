@@ -21,7 +21,7 @@ class Q_Table():
         self.discount = d
 
     def predict(self,state,life):
-        if state in self.q_table and np.random.random() > self.epsilon:
+        if state in self.q_table and life/100 > self.epsilon:
             return np.argmax(self.q_table[state])
         else:
             return random.choice(self.actions)
@@ -121,10 +121,14 @@ class Population():
 
         # Mutation
         if (random.random() < 0.02):
-            lr = lr * 2
+            lr = lr * 1.2
+        elif(random.random() < 0.04):
+            lr = lr * 0.8
         if (random.random() < 0.02):
-            d = d * 2
-        if (random.random() < 0.02):
+            d = d * 1.2
+        elif (random.random() < 0.04):
+            d = d * 0.8
+        if (random.random() < 0.04):
             e = random.random()
 
         baby_brain = Q_Table(lr, e, d)

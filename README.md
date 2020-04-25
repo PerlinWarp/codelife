@@ -70,6 +70,9 @@ This new type of agent now has some parameters, which I decided to optimise usin
 
 ![My genetic algorithm failing to optimise parameters](https://raw.githubusercontent.com/PerlinWarp/YearOfAI/master/media/QTableGA.png)
 
+## NEAT
+![A NEAT Agent beating the enviroment](https://raw.githubusercontent.com/PerlinWarp/YearOfAI/master/media/NEAT.gif)
+
 
 ### TODO
 Agents:
